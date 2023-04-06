@@ -1,0 +1,49 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <Style x:Key="plainText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="gg sans Normal"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="15"/>
+    </Style>
+
+    <Style x:Key="RPTextB" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="gg sans"/>
+        <Setter Property="Foreground" Value="LightGray"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style x:Key="RPText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="gg sans Normal"/>
+        <Setter Property="Foreground" Value="LightGray"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Margin" Value="7,10,0,0"/>
+    </Style>
+
+    <Style x:Key="TextBlockText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="gg sans Normal"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+
+    <Style x:Key="TextBoxText" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
+        <Setter Property="FontFamily" Value="gg sans Normal"/>
+        <Setter Property="Foreground" Value="LightGray"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="0,0,0,15" />
+        <Setter Property="BorderBrush" Value="{StaticResource bgDcBlue}"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+        <Setter Property="MaxWidth" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}}, Path=ActualWidth}"/>
+        <Style.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
+       
+    </Style>
+
+    <Style x:Key="ImageTips" TargetType="Border">
+        <Setter Property="ToolTipService.Placement" Value="Top"/>
+    </Style>
+</ResourceDictionary>

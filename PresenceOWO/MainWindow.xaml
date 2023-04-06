@@ -1,0 +1,175 @@
+﻿<Window x:Class="PresenceOWO.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:PresenceOWO"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+        xmlns:vm="clr-namespace:PresenceOWO.ViewModels"
+        xmlns:views="clr-namespace:PresenceOWO.Views"
+        mc:Ignorable="d"
+        Title="PresenceOWO" Height="450" Width="800"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="30"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="Transparent"
+        FontFamily="{DynamicResource MaterialDesignFont}" 
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        Topmost="True"
+        ResizeMode="CanResizeWithGrip"
+        >
+    <!--Background= "{DynamicResource MaterialDesignPaper}"-->
+
+    <Window.DataContext>
+        <vm:MainVM/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:RPVM}">
+            <views:RPView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PreferenceVM}">
+            <views:PreferenceView/>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Border CornerRadius="10"
+            BorderThickness="2"
+            >
+        <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{StaticResource dcGrey}" Offset="0"></GradientStop>
+                <GradientStop Color="{StaticResource dcDark}" Offset="1"></GradientStop>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Border CornerRadius="10,0,0,10"
+                    Grid.Column="0">
+
+                <Border.Background>
+                    <SolidColorBrush Color="{StaticResource dcDGrey}"/>
+                </Border.Background>
+
+                <StackPanel>
+                    <!-- LOGO -->
+                    <StackPanel Orientation="Horizontal"
+                            Height="75"
+                            Margin="3,20,0,40"
+                            >
+
+                        <Button Background="Transparent"
+                                BorderThickness="0"
+                                Height="75"
+                                VerticalAlignment="Center"
+                                x:Name="LogoBtn"
+                                >
+
+                            <TextBlock VerticalAlignment="Center"
+                                       FontSize="60" 
+                                       Foreground="{StaticResource bgDcBlue}"
+                                       FontFamily="Torus"
+                                       Text="OWO!"
+                                       />
+                        </Button>
+                    </StackPanel>
+
+                    <RadioButton Style="{StaticResource menuButton}"
+                                 Margin="25,0,0,0"
+                                 x:Name="RPBtn"
+                                 IsChecked="True"
+                                 Command="{Binding ShowRPView}">
+                        <TextBlock>
+                            Rich Presence
+                        </TextBlock>
+                    </RadioButton>
+
+                    <RadioButton Style="{StaticResource menuButton}"
+                                 Margin="25,0,0,0"
+                                 x:Name="PreferenceBtn"
+                                 Command="{Binding ShowPreferenceView}">
+                        <TextBlock>
+                            Preferences
+                        </TextBlock>
+                    </RadioButton>
+                </StackPanel>
+            </Border>
+
+            <!-- Content -->
+            <Border CornerRadius="0,10,10,0"
+                    Grid.Column="1">
+
+                <Border.Background>
+                    <SolidColorBrush Color="{StaticResource dcGrey}"/>
+                </Border.Background>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border CornerRadius="0,10,0,0"
+                            MouseLeftButtonDown="ControlBar_MouseLeftButtonDown"
+                            MouseEnter="ControlBar_MouseEnter">
+
+                        <Border.Background>
+                            <SolidColorBrush Color="{StaticResource dcDGrey}"></SolidColorBrush>
+                        </Border.Background>
+                        
+                        <StackPanel x:Name="ControlBar"
+                                    Grid.Row="0"
+                                    Orientation="Horizontal"
+                                    FlowDirection="RightToLeft"
+                                    HorizontalAlignment="Right"
+                                    Background="Transparent"
+                                    Margin="0,0,5,0"
+                                    >
+
+
+                            <Button x:Name="CloseBtn"
+                                    Style="{StaticResource controlButton}"
+                                    Click="CloseBtn_Click"
+                                    Tag="#f23f42">
+                                <fa:IconImage Icon="Xmark" Style="{StaticResource controlBtnIcon}"/>
+                            </Button>
+                            <Button x:Name="MaximizeBtn"
+                                    Style="{StaticResource controlButton}"
+                                    Click="MaximizeBtn_Click"
+                                    Tag="#36393e">
+                                <fa:IconImage Icon="WindowMaximize" Style="{StaticResource controlBtnIcon}"/>
+                            </Button>
+                            <Button x:Name="MinimizeBtn"
+                                    Style="{StaticResource controlButton}"
+                                    Click="MinimizeBtn_Click"
+                                    Tag="#36393e">
+                                <fa:IconImage Icon="WindowMinimize" Style="{StaticResource controlBtnIcon}"/>
+
+                            </Button>
+
+                        </StackPanel>
+                    </Border>
+
+                    <ContentControl Content="{Binding CurrentChildView}"
+                                    Grid.Row="1"
+                                    Margin="10"
+                                    HorizontalContentAlignment="Stretch" 
+                                    VerticalContentAlignment="Stretch"/>
+
+                </Grid>
+
+            </Border>
+        </Grid>
+    </Border>
+</Window>
