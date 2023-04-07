@@ -77,6 +77,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\CenterToolTipConverter.cs" />
+    <Compile Include="DoRPC\ArgDoing.cs" />
     <Compile Include="DoRPC\Client.cs" />
     <Compile Include="DoRPC\RPArgs.cs" />
     <Compile Include="ViewModels\PreferenceVM.cs" />

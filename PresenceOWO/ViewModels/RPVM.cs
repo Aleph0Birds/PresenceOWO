@@ -23,7 +23,9 @@ namespace PresenceOWO.ViewModels
             UpdatePresence = new VMCommand(Update);
             Args = new RPArgs() {
                 Details = "OWO",
-                State = "owo?"
+                State = "owo?",
+                LargeImageText = "! OWO !",
+                SmallImageText = ".w."
             };
         }
         private void Update(object obj)

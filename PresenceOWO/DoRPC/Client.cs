@@ -42,6 +42,29 @@ namespace PresenceOWO.DoRPC
 
             if (!string.IsNullOrEmpty(e.ApplicationID) && app_id != e.ApplicationID)
                 UpdateAppID(e.ApplicationID);
+
+            StartPresence(e);
+        }
+
+        private static void StartPresence(RPArgs e)
+        {
+
+            // oh yeah nice ass
+            Assets ass = new Assets
+            {
+                SmallImageText = e.SmallImageText,
+                LargeImageText = e.LargeImageText,
+                LargeImageKey = e.LargeImageKey,
+                SmallImageKey = e.SmallImageKey
+            };
+
+            RichPresence presence = new RichPresence()
+                .WithDetails(e.Details)
+                .WithState(e.State)
+                .WithAssets(ass)
+                ;
+
+            client.SetPresence(presence);
         }
 
         private static void UpdateAppID(string newID)

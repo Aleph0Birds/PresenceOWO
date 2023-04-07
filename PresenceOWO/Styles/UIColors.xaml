@@ -5,10 +5,12 @@
     <Color x:Key="dcDGrey">#282b30</Color>
     <Color x:Key="dcDark">#1e2124</Color>
     <Color x:Key="dcBlue">#7289da</Color>
+    <Color x:Key="dcDDark">#111214</Color>
 
     <SolidColorBrush x:Key="bgDcGrey" Color="{StaticResource dcGrey}"/>
     <SolidColorBrush x:Key="bgDcDGrey" Color="{StaticResource dcDGrey}"/>
     <SolidColorBrush x:Key="bgDcDark" Color="{StaticResource dcDark}"/>
     <SolidColorBrush x:Key="bgDcBlue" Color="{StaticResource dcBlue}"/>
+    <SolidColorBrush x:Key="bgDcDDark" Color="{StaticResource dcDDark}"/>
 
 </ResourceDictionary>

@@ -20,13 +20,5 @@ namespace PresenceOWO.DoRPC
         public long EndTimeStamp { get; set; }
 
 
-
-        /// <summary>
-        /// test
-        /// </summary>
-        void asd()
-        {
-            new RichPresence() { };
-        }
     }
 }

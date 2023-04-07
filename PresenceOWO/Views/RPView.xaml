@@ -12,6 +12,12 @@
              HorizontalAlignment="Stretch"
              FontFamily="gg sans Normal">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -96,7 +102,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" MinWidth="400"/>
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0"
@@ -104,8 +110,13 @@
                            Height="125"
                            Margin="10"
                            CornerRadius="7"
-                           Style="{StaticResource ImageTips}"
-                           ToolTip="{Binding Args.LargeImageText}">
+                           Style="{StaticResource ImageTips}">
+
+                        <Border.ToolTip>
+                            <ToolTip Style="{StaticResource ImageTipsBox}"
+                                     Content="{Binding Args.LargeImageText}"/>
+
+                        </Border.ToolTip>
                         
                         <Border.Background>
                             <SolidColorBrush Color="{StaticResource dcDGrey}"/>
@@ -123,14 +134,18 @@
                             CornerRadius="100"
                             BorderThickness="4"
                             BorderBrush="{StaticResource bgDcDark}"
-                            Style="{StaticResource ImageTips}"
-                            ToolTip="{Binding Args.SmallImageText}">
+                            Style="{StaticResource ImageTips}">
 
+                        <Border.ToolTip>
+                            <ToolTip Style="{StaticResource ImageTipsBox}"
+                                     Content="{Binding Args.SmallImageText}"/>
+                        </Border.ToolTip>
+                        
                         <Border.Background>
                             <SolidColorBrush Color="{StaticResource dcDGrey}"/>
                         </Border.Background>
                     </Border>
-
+ 
                     <StackPanel Grid.Column="1"
                                 Orientation="Vertical">
                         <TextBlock Style="{StaticResource RPText}"><Bold>[App Name]</Bold></TextBlock>
