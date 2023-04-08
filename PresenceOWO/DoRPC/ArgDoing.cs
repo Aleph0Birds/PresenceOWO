@@ -11,9 +11,9 @@ namespace PresenceOWO.DoRPC
     {
         private static Regex regex = new Regex(@" +");
 
-        public static ulong StartTime { get; set; }
+        public static DateTime StartTime { get; set; }
 
-        public static ulong? LastUpdateTime { get; set; }
+        public static DateTime? LastUpdateTime { get; set; }
 
         public static string SimplifySpace(string str)
         {
@@ -29,9 +29,26 @@ namespace PresenceOWO.DoRPC
         /// <returns>UTC Timestamp</returns>
         public static ulong DateTimeToTimestamp(DateTime date, DateTime time)
         {
-            DateTime selected = DateTime.Parse(date.Date.ToShortDateString() + "\t" + time.TimeOfDay.ToString()).ToUniversalTime();
+            DateTime selected = CombineDateTime(date, time).ToUniversalTime();
             return (ulong)((DateTimeOffset)selected).ToUnixTimeSeconds();
             
+        }
+
+        public static ulong DateTimeToTimestamp(DateTime dateTime)
+        {
+            return (ulong)((DateTimeOffset)dateTime).ToUniversalTime().ToUnixTimeSeconds();
+
+        }
+
+        /// <summary>
+        /// Combines two datetime into one
+        /// </summary>
+        /// <param name="date">Date of DateTime</param>
+        /// <param name="time">Time of DateTime</param>
+        /// <returns>Combined DateTime in local</returns>
+        public static DateTime CombineDateTime(DateTime date, DateTime time)
+        {
+            return DateTime.Parse(date.Date.ToShortDateString() + "\t" + time.TimeOfDay.ToString());
         }
     }
 }

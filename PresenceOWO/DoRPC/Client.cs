@@ -80,8 +80,8 @@ namespace PresenceOWO.DoRPC
 
             client.SetPresence(presence);
 
-            ArgDoing.LastUpdateTime = (ulong)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            RPArgs.ViewModel.UpdateTimestampText(ArgDoing.LastUpdateTime.ToString());
+            ArgDoing.LastUpdateTime = DateTime.Now;
+            RPArgs.ViewModel.UpdateTimestampText(ArgDoing.DateTimeToTimestamp((DateTime)ArgDoing.LastUpdateTime).ToString());
         }
 
         private static void UpdateAppID(string newID)
