@@ -32,7 +32,7 @@ namespace PresenceOWO
             helper = new WindowInteropHelper(this);
             ToolTipService.ShowDurationProperty.OverrideMetadata(
                 typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
-            ArgDoing.StartTime = (ulong)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            ArgDoing.StartTime = DateTime.Now;
             ArgDoing.LastUpdateTime = null;
         }
 
