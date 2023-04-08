@@ -20,7 +20,7 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
-        Topmost="True"
+        Topmost="False"
         ResizeMode="CanResizeWithGrip"
         >
     <!--Background= "{DynamicResource MaterialDesignPaper}"-->

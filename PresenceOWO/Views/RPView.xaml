@@ -3,29 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:convert="clr-namespace:PresenceOWO.Converters"
              xmlns:vm="clr-namespace:PresenceOWO.ViewModels"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
              d:DataContext="{d:DesignInstance Type=vm:RPVM}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="1000" d:DesignWidth="1000"
              VerticalAlignment="Stretch" 
              HorizontalAlignment="Stretch"
              FontFamily="gg sans Normal">
 
     <UserControl.Resources>
         <ResourceDictionary>
-
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <convert:ItemsToArray x:Key="ItemsToArray" />
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*" MaxWidth="400"/>
+            <ColumnDefinition Width="*" MaxWidth="435"/>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -35,7 +39,7 @@
                         Width="400"
                         Orientation="Vertical"
                         HorizontalAlignment="Left"
-                        Margin="10,0,20,0">
+                        Margin="10,0,15,0">
                 <TextBlock  Text="Application ID" Style="{StaticResource TextBlockText}"/>
                 <TextBox Style="{StaticResource TextBoxText}" Text="{Binding Args.ApplicationID}"/>
 
@@ -51,7 +55,7 @@
                 <StackPanel Grid.Column="0"
                         Orientation="Vertical"
                         HorizontalAlignment="Stretch"
-                        Margin="10,0,5,0"
+                        Margin="10,0,15,0"
                         >
                     <TextBlock Text="Details" Style="{StaticResource TextBlockText}"/>
                     <TextBox Style="{StaticResource TextBoxText}" Text="{Binding Args.Details, UpdateSourceTrigger=PropertyChanged}"/>
@@ -77,7 +81,78 @@
 
             </Grid>
 
-            <Button Grid.Row="2"
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="2"
+                        Margin="10,0,15,0">
+                <DockPanel >
+                    <TextBlock  Text="Timestamp" Style="{StaticResource TextBlockText}"
+                                VerticalAlignment="Center"/>
+                    <ComboBox HorizontalAlignment="Right" 
+                              Width="auto"
+                              MinWidth="200"
+                              Style="{StaticResource TimeComboBox}"
+                              SelectedIndex="{Binding Args.TimestampModeNumber}"
+                              >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding UpdateVisibility}">
+                                    <i:InvokeCommandAction.CommandParameter>
+                                        <Binding RelativeSource="{RelativeSource AncestorType=ComboBox}"/>
+                                    </i:InvokeCommandAction.CommandParameter>
+                                </i:InvokeCommandAction>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="Loaded">
+                                <i:InvokeCommandAction Command="{Binding InitTimeElements}">
+                                    <i:InvokeCommandAction.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource ItemsToArray}">
+                                            <Binding RelativeSource="{RelativeSource AncestorType=ComboBox}"/>
+                                            <Binding RelativeSource="{RelativeSource AncestorType=StackPanel}"/>
+                                        </MultiBinding>
+                                    </i:InvokeCommandAction.CommandParameter>
+                                </i:InvokeCommandAction>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        
+                        <ComboBoxItem Style="{StaticResource ComboItem}">None</ComboBoxItem>
+                        <ComboBoxItem Style="{StaticResource ComboItem}">Since PresenceOWO started</ComboBoxItem>
+                        <ComboBoxItem Style="{StaticResource ComboItem}">Since last status updated</ComboBoxItem>
+                        <ComboBoxItem Style="{StaticResource ComboItem}">Since Custom Time</ComboBoxItem>
+                        <ComboBoxItem Style="{StaticResource ComboItem}">Until Custom Time</ComboBoxItem>
+
+                    </ComboBox>
+                </DockPanel>
+                <TextBox Style="{StaticResource TextBoxText}"
+                         PreviewTextInput="TextBox_PreviewTextInput"
+                         MaxLength="10"
+                         IsEnabled="{Binding TimestampBoxEnabled}"
+                         Name="TimestampBox"
+                         Text="{Binding Args.Timestamp}"/>
+                <Grid 
+                            Name="TimeContainer">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <DatePicker Height="auto"
+                              Name="Calendar"
+                              Margin="0,0,15,0"
+                              FontSize="12"
+                              SelectedDate="{Binding SelectedDate}">
+                    
+                    </DatePicker>
+                    <md:TimePicker Grid.Column="1"
+                                   Height="auto"
+                                   Name="Clock"
+                                   Margin="10,0,0,0"
+                                   FontSize="12"
+                                   SelectedTime="{Binding SelectedTime}">
+                        
+                    </md:TimePicker>
+                </Grid>
+
+            </StackPanel>
+
+            <Button Grid.Row="3"
                     Content="Update Rich Presence"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Center"
@@ -91,8 +166,8 @@
                 Background="{StaticResource bgDcDark}"
                 CornerRadius="5">
             <StackPanel Orientation="Vertical"
-                        VerticalAlignment="Center"
-                        Margin="5,0,0,0">
+                        VerticalAlignment="Top"
+                        Margin="5,100,0,0">
 
                 <TextBlock Style="{StaticResource RPTextB}"
                            Margin="10,0,0,0">
@@ -151,7 +226,7 @@
                         <TextBlock Style="{StaticResource RPText}"><Bold>[App Name]</Bold></TextBlock>
                         <TextBlock Text="{Binding Args.Details}" Style="{StaticResource RPText}"/>
                         <TextBlock Text="{Binding Args.State}" Style="{StaticResource RPText}"/>
-                        <TextBlock></TextBlock>
+                        <TextBlock Style="{StaticResource RPText}"></TextBlock>
                     </StackPanel>
 
 

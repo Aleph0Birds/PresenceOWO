@@ -29,6 +29,8 @@
         <Setter Property="FontSize" Value="20"/>
     </Style>
 
+
+
     <Style x:Key="TextBoxText" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
         <Setter Property="FontFamily" Value="gg sans Normal"/>
         <Setter Property="Foreground" Value="LightGray"/>
@@ -81,5 +83,16 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>-->
+    </Style>
+
+    <Style x:Key="ComboItem" TargetType="ComboBoxItem">
+        <Setter Property="FontFamily" Value="gg sans Normal"/>
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+
+    <Style x:Key="TimeComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="Padding" Value="10" />
     </Style>
 </ResourceDictionary>

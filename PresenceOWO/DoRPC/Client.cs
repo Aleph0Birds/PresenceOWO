@@ -31,7 +31,10 @@ namespace PresenceOWO.DoRPC
             if(!Initialized)
             {
                 if (string.IsNullOrEmpty(e.ApplicationID))
+                {
                     MessageBox.Show(@"Please input your application id");
+                    return;
+                }
                 else
                 {
                     app_id = e.ApplicationID;
@@ -64,7 +67,21 @@ namespace PresenceOWO.DoRPC
                 .WithAssets(ass)
                 ;
 
+            if(e.TimestampModeNumber != 0)
+            {
+                Timestamps stamp = new Timestamps();
+                if((TimestampMode)e.TimestampModeNumber == TimestampMode.UntilCustom)
+                    stamp.End = Timestamps.FromUnixMilliseconds(e.Timestamp * 1000);
+                else
+                    stamp.Start = Timestamps.FromUnixMilliseconds(e.Timestamp * 1000);
+
+                presence.WithTimestamps(stamp);
+            }
+
             client.SetPresence(presence);
+
+            ArgDoing.LastUpdateTime = (ulong)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            RPArgs.ViewModel.UpdateTimestampText(ArgDoing.LastUpdateTime.ToString());
         }
 
         private static void UpdateAppID(string newID)

@@ -16,6 +16,7 @@ using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using PresenceOWO.ViewModels;
+using PresenceOWO.DoRPC;
 
 namespace PresenceOWO
 {
@@ -31,6 +32,8 @@ namespace PresenceOWO
             helper = new WindowInteropHelper(this);
             ToolTipService.ShowDurationProperty.OverrideMetadata(
                 typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
+            ArgDoing.StartTime = (ulong)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            ArgDoing.LastUpdateTime = null;
         }
 
         [DllImport("user32.dll")]

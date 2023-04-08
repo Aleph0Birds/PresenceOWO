@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,9 +22,15 @@ namespace PresenceOWO.Views
     /// </summary>
     public partial class RPView : UserControl
     {
+        private Regex notNumberRegEx = new Regex(@"\D");
         public RPView()
         {
             InitializeComponent();
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = notNumberRegEx.IsMatch(e.Text);
         }
     }
 }
