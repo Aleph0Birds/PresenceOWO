@@ -9,7 +9,7 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
              d:DataContext="{d:DesignInstance Type=vm:RPVM}"
              mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="1000"
+             d:DesignHeight="600" d:DesignWidth="1000"
              VerticalAlignment="Stretch" 
              HorizontalAlignment="Stretch"
              FontFamily="gg sans Normal">
@@ -134,10 +134,11 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <DatePicker Height="auto"
-                              Name="Calendar"
-                              Margin="0,0,15,0"
-                              FontSize="12"
-                              SelectedDate="{Binding SelectedDate}">
+                                Name="Calendar"
+                                Margin="0,0,15,0"
+                                FontSize="12"
+                                SelectedDate="{Binding SelectedDate}"
+                                IsEnabled="{Binding CustomTimeSelectEnabled}">
                     
                     </DatePicker>
                     <md:TimePicker Grid.Column="1"
@@ -145,7 +146,8 @@
                                    Name="Clock"
                                    Margin="10,0,0,0"
                                    FontSize="12"
-                                   SelectedTime="{Binding SelectedTime}">
+                                   SelectedTime="{Binding SelectedTime}"
+                                   IsEnabled="{Binding CustomTimeSelectEnabled}">
                         
                     </md:TimePicker>
                 </Grid>
@@ -226,7 +228,8 @@
                         <TextBlock Style="{StaticResource RPText}"><Bold>[App Name]</Bold></TextBlock>
                         <TextBlock Text="{Binding Args.Details}" Style="{StaticResource RPText}"/>
                         <TextBlock Text="{Binding Args.State}" Style="{StaticResource RPText}"/>
-                        <TextBlock Style="{StaticResource RPText}"></TextBlock>
+                        <TextBlock Style="{StaticResource RPText}" Text="{Binding TimerString}"/>
+
                     </StackPanel>
 
 

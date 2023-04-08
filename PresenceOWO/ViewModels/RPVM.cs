@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Timers;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,11 @@ namespace PresenceOWO.ViewModels
         private DateTime selectedDate;
         private DateTime selectedTime;
         private bool showTimeContainer;
+        private readonly DispatcherTimer updateTimer;
+        private DateTime? selectedDateTime;
+        private bool customTimeSelectEnabled;
+        private bool timestampBoxEnabled;
+        private string timerString;
 
         public RPArgs Args { get; set; }
 
@@ -31,16 +37,43 @@ namespace PresenceOWO.ViewModels
 
         public VMCommand InitTimeElements { get; init; }
 
-        public bool TimestampBoxEnabled { get; set; }
-        public bool CustomTimeSelectEnabled { get; set; }
+        public bool TimestampBoxEnabled
+        {
+            get => timestampBoxEnabled;
+            set
+            {
+                timestampBoxEnabled = value;
+                OnPropChanged(nameof(TimestampBoxEnabled));
+            }
+        }
+        public bool CustomTimeSelectEnabled
+        {
+            get => customTimeSelectEnabled;
+            set
+            {
+                customTimeSelectEnabled = value;
+                OnPropChanged(nameof(CustomTimeSelectEnabled));
+            }
+        }
+
+        public string TimerString 
+        {
+            get => timerString;
+            set
+            {
+                timerString = value;
+                OnPropChanged(nameof(TimerString));
+            }
+        }
 
         /// <summary>
         /// Local Date
         /// </summary>
-        public DateTime SelectedDate 
-        { 
-            get => selectedDate; 
-            set {
+        public DateTime SelectedDate
+        {
+            get => selectedDate;
+            set
+            {
                 selectedDate = value;
                 OnPropChanged(nameof(SelectedDate));
             }
@@ -49,8 +82,8 @@ namespace PresenceOWO.ViewModels
         /// <summary>
         /// Local Time
         /// </summary>
-        public DateTime SelectedTime 
-        { 
+        public DateTime SelectedTime
+        {
             get => selectedTime;
             set
             {
@@ -70,8 +103,12 @@ namespace PresenceOWO.ViewModels
 
             timestampElements = new object[4];
 
+            updateTimer = new DispatcherTimer();
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Interval = new TimeSpan(0, 0, 1);
+
             RPArgs.ViewModel = this;
-            
+
             // Arguments Initialization
             Args = new RPArgs()
             {
@@ -81,11 +118,41 @@ namespace PresenceOWO.ViewModels
                 SmallImageText = ".w.",
                 TimestampModeNumber = 1,
             };
+
             showTimeContainer = true;
             SelectedDate = DateTime.Today.ToLocalTime();
             SelectedTime = DateTime.Now;
 
+            updateTimer.IsEnabled = true;
+            updateTimer.Start();
             PropertyChanged += OnPropChangedHandle;
+        }
+
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+
+            if (Args.TimestampModeNumber == 0)
+                return;
+
+            TimeSpan span;
+            if (Args.TimestampModeNumber == 4) // until custom
+            {
+                if (selectedDateTime < DateTime.Now) 
+                    span = TimeSpan.Zero;
+                else
+                    span = (TimeSpan)(selectedDateTime - DateTime.Now);
+                
+                TimerString = $"{span:hh\\:mm\\:ss} left";
+            }
+            else
+            {
+
+                if (selectedDateTime > DateTime.Now)
+                    span = TimeSpan.Zero;
+                else
+                    span = (TimeSpan)(DateTime.Now - selectedDateTime);
+                TimerString = $"{span:hh\\:mm\\:ss} elapsed";
+            }
         }
 
         private void updateClient(object obj)
@@ -96,7 +163,13 @@ namespace PresenceOWO.ViewModels
         private void UpdateElementsVisibilityOnChanged(object obj)
         {
             ComboBox comboBox = obj as ComboBox;
-            if (!comboBox.IsLoaded || comboBox.SelectedIndex == -1) return;
+            if (!comboBox.IsLoaded || comboBox.SelectedIndex == -1)
+            {
+                updateTimer.Stop();
+                updateTimer.IsEnabled = false;
+                return;
+            }
+            updateTimer.IsEnabled = true;
 
             OnTimestampModeChanged(comboBox.SelectedIndex);
             UpdateTimeElementVisibility();
@@ -107,18 +180,8 @@ namespace PresenceOWO.ViewModels
             TextBox timestampTextBox = timestampElements[0] as TextBox;
             Grid timeContainer = timestampElements[1] as Grid;
 
-            timestampTextBox.IsEnabled = TimestampBoxEnabled;
             timestampTextBox.Text = Args.TimestampModeNumber == 0 ? "" : Args.Timestamp.ToString();
             timeContainer.Visibility = (Visibility)(1 - BoolTooInt(showTimeContainer));
-
-            if (!showTimeContainer) return;
-
-            DatePicker datePicker = timestampElements[2] as DatePicker;
-            TimePicker timePicker = timestampElements[3] as TimePicker;
-
-            datePicker.IsEnabled = CustomTimeSelectEnabled;
-            timePicker.IsEnabled = CustomTimeSelectEnabled;
-
         }
 
         public void UpdateTimestampText(string newValue)
@@ -140,20 +203,25 @@ namespace PresenceOWO.ViewModels
                     TimestampBoxEnabled = false;
                     CustomTimeSelectEnabled = false;
                     showTimeContainer = false;
+                    updateTimer.Stop();
                     break;
                 //
                 case 1:
-                    Args.Timestamp = ArgDoing.StartTime;
-                    TimestampBoxEnabled = true;
-                    CustomTimeSelectEnabled = false;
-                    showTimeContainer = true;
-                    break;
+                    Args.Timestamp = ArgDoing.DateTimeToTimestamp(ArgDoing.StartTime);
+                    selectedDateTime = ArgDoing.StartTime;
+                    goto case 420;
+
                 case 2:
-                    Args.Timestamp = ArgDoing.LastUpdateTime ?? ArgDoing.StartTime;
+                    var t = ArgDoing.LastUpdateTime ?? ArgDoing.StartTime;
+                    Args.Timestamp = ArgDoing.DateTimeToTimestamp(t);
+                    selectedDateTime = t;
+                    goto case 420;
+
+                case 420:
                     TimestampBoxEnabled = true;
                     CustomTimeSelectEnabled = false;
                     showTimeContainer = true;
-                    break;
+                    goto case 69420;
 
                 // Custom
                 case 3:
@@ -162,7 +230,13 @@ namespace PresenceOWO.ViewModels
                     CustomTimeSelectEnabled = true;
                     TimestampBoxEnabled = true;
                     showTimeContainer = true;
+                    selectedDateTime = ArgDoing.CombineDateTime(SelectedDate, SelectedTime);
+                    goto case 69420;
+
+                case 69420:
+                    updateTimer.Start();
                     break;
+
 
                 default:
                     throw new Exception("Timestamp mode not supported.");
@@ -190,7 +264,7 @@ namespace PresenceOWO.ViewModels
                 e.PropertyName != nameof(SelectedTime))
                 return;
 
-
+            selectedDateTime = ArgDoing.CombineDateTime(SelectedDate, SelectedTime);
             Args.Timestamp = ArgDoing.DateTimeToTimestamp(SelectedDate, SelectedTime);
             UpdateTimestampText(Args.Timestamp.ToString());
         }
