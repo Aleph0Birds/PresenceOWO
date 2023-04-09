@@ -28,6 +28,7 @@ namespace PresenceOWO.ViewModels
         private bool customTimeSelectEnabled;
         private bool timestampBoxEnabled;
         private string timerString;
+        private bool stopPresenceButtonEnabled;
 
         public RPArgs Args { get; set; }
 
@@ -36,6 +37,7 @@ namespace PresenceOWO.ViewModels
         public VMCommand UpdateVisibility { get; init; }
 
         public VMCommand InitTimeElements { get; init; }
+        public VMCommand StopPresence { get; init; }
 
         public bool TimestampBoxEnabled
         {
@@ -63,6 +65,16 @@ namespace PresenceOWO.ViewModels
             {
                 timerString = value;
                 OnPropChanged(nameof(TimerString));
+            }
+        }
+
+        public bool StopPresenceButtonEnabled
+        {
+            get => stopPresenceButtonEnabled;
+            set
+            {
+                stopPresenceButtonEnabled = value;
+                OnPropChanged(nameof(StopPresenceButtonEnabled));
             }
         }
 
@@ -100,6 +112,7 @@ namespace PresenceOWO.ViewModels
                 (param) => param != null);
             InitTimeElements = new VMCommand(InitTimestampElements,
                 (param) => !(param as object[]).Any(e => e == null));
+            StopPresence = new VMCommand(stopPresence);
 
             timestampElements = new object[4];
 
@@ -108,6 +121,7 @@ namespace PresenceOWO.ViewModels
             updateTimer.Interval = new TimeSpan(0, 0, 1);
 
             RPArgs.ViewModel = this;
+            Client.InPresence = false;
 
             // Arguments Initialization
             Args = new RPArgs()
@@ -122,6 +136,7 @@ namespace PresenceOWO.ViewModels
             showTimeContainer = true;
             SelectedDate = DateTime.Today.ToLocalTime();
             SelectedTime = DateTime.Now;
+            StopPresenceButtonEnabled = false;
 
             updateTimer.IsEnabled = true;
             updateTimer.Start();
@@ -141,11 +156,11 @@ namespace PresenceOWO.ViewModels
             TimeSpan span;
             if (Args.TimestampModeNumber == 4) // until custom
             {
-                if (selectedDateTime < DateTime.Now) 
+                if (selectedDateTime < DateTime.Now)
                     span = TimeSpan.Zero;
                 else
                     span = (TimeSpan)(selectedDateTime - DateTime.Now);
-                
+
                 TimerString = $"{span:hh\\:mm\\:ss} left";
             }
             else
@@ -162,6 +177,13 @@ namespace PresenceOWO.ViewModels
         private void updateClient(object obj)
         {
             Client.HandleUpdate(this, Args);
+            StopPresenceButtonEnabled = Client.InPresence;
+        }
+
+        private void stopPresence(object obj)
+        {
+            Client.StopPresence();
+            StopPresenceButtonEnabled = Client.InPresence;
         }
 
         private void UpdateElementsVisibilityOnChanged(object obj)

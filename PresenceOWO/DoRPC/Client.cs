@@ -15,6 +15,8 @@ namespace PresenceOWO.DoRPC
         private static DiscordRpcClient client;
         private static string app_id;
         private static bool Initialized;
+
+        public static bool InPresence { get; set; }
         public static void Initialize()
         {
             client = new (app_id)
@@ -79,16 +81,23 @@ namespace PresenceOWO.DoRPC
             }
 
             client.SetPresence(presence);
+            InPresence = true;
 
             ArgDoing.LastUpdateTime = DateTime.Now;
             RPArgs.ViewModel.UpdateTimestampText(ArgDoing.DateTimeToTimestamp((DateTime)ArgDoing.LastUpdateTime).ToString());
         }
 
+        public static void StopPresence()
+        {
+            InPresence = false;
+            client.ClearPresence();
+        }
         private static void UpdateAppID(string newID)
         {
             app_id = newID;
             Initialized = false;
             Initialize();
         }
+
     }
 }

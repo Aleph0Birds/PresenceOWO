@@ -167,7 +167,9 @@
                         Foreground="LightGray"
                         Background="{StaticResource bgDcGrey}"
                         IsEnabled="{Binding StopPresenceButtonEnabled}"
-                        Command="{Binding StopPresence}">
+                        Command="{Binding StopPresence}"
+                        BorderBrush="Red"
+                        BorderThickness="0.75">
                     
                 </Button>
                 
