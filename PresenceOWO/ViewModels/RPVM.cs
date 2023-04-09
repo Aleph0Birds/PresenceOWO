@@ -120,7 +120,6 @@ namespace PresenceOWO.ViewModels
             updateTimer.Tick += UpdateTimer_Tick;
             updateTimer.Interval = new TimeSpan(0, 0, 1);
 
-            RPArgs.ViewModel = this;
             Client.InPresence = false;
 
             // Arguments Initialization
@@ -215,7 +214,12 @@ namespace PresenceOWO.ViewModels
             (timestampElements[0] as TextBox).Text = newValue;
         }
 
-        private int BoolTooInt(bool b)
+        public void UpdateTimestampText()
+        {
+            UpdateTimestampText(Args.Timestamp.ToString());
+        }
+
+        private unsafe byte BoolToByte(bool b)
         {
             return b ? 1 : 0;
         }

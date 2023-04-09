@@ -80,17 +80,19 @@ namespace PresenceOWO.DoRPC
                 presence.WithTimestamps(stamp);
             }
 
+            client.SkipIdenticalPresence = true;
             client.SetPresence(presence);
             InPresence = true;
 
             ArgDoing.LastUpdateTime = DateTime.Now;
-            RPArgs.ViewModel.UpdateTimestampText(ArgDoing.DateTimeToTimestamp((DateTime)ArgDoing.LastUpdateTime).ToString());
+            viewModel.UpdateTimestampText();
         }
 
         public static void StopPresence()
         {
             InPresence = false;
             client.ClearPresence();
+            ArgDoing.LastUpdateTime = DateTime.Now;
         }
         private static void UpdateAppID(string newID)
         {

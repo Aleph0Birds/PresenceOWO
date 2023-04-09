@@ -10,7 +10,6 @@ namespace PresenceOWO.DoRPC
 {
     public class RPArgs : EventArgs
     {
-        public static RPVM ViewModel { get; set; }
         public string ApplicationID { get; set; }
         public string Details { get; set; }
         public string State { get; set; }
