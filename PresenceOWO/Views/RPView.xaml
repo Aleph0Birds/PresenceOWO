@@ -154,14 +154,32 @@
 
             </StackPanel>
 
-            <Button Grid.Row="3"
-                    Content="Update Rich Presence"
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Center"
-                    FontSize="20"
-                    Foreground="LightGray"
-                    Background="{StaticResource bgDcGrey}"
-                    Command="{Binding Path=UpdatePresence}"/>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+                        Content="Stop Presence"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        FontSize="20"
+                        Foreground="LightGray"
+                        Background="{StaticResource bgDcGrey}"
+                        IsEnabled="{Binding StopPresenceButtonEnabled}"
+                        Command="{Binding StopPresence}">
+                    
+                </Button>
+                
+                <Button Grid.Column="1"
+                        Content="Update Rich Presence"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        FontSize="20"
+                        Foreground="LightGray"
+                        Background="{StaticResource bgDcGrey}"
+                        Command="{Binding UpdatePresence}" Cursor="Hand"/>
+            </Grid>
         </Grid>
 
         <Border Grid.Column="1"

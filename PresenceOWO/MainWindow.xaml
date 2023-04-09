@@ -43,133 +43,133 @@
             >
         <Border.BorderBrush>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="{StaticResource dcGrey}" Offset="0"></GradientStop>
-                <GradientStop Color="{StaticResource dcDark}" Offset="1"></GradientStop>
+                <GradientStop Color="{StaticResource dcGrey}" Offset="1"></GradientStop>
+                <GradientStop Color="{StaticResource dcDark}" Offset="0"></GradientStop>
             </LinearGradientBrush>
         </Border.BorderBrush>
 
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-
-            <Border CornerRadius="10,0,0,10"
-                    Grid.Column="0">
+            <Border CornerRadius="9,9,0,0"
+                    MouseLeftButtonDown="ControlBar_MouseLeftButtonDown"
+                    MouseEnter="ControlBar_MouseEnter"
+                    Grid.Row="0" >
 
                 <Border.Background>
-                    <SolidColorBrush Color="{StaticResource dcDGrey}"/>
+                    <SolidColorBrush Color="{StaticResource dcDark}"></SolidColorBrush>
                 </Border.Background>
+                <DockPanel>
+                    <TextBlock HorizontalAlignment="Left"
+                               Margin="10,0,0,0"
+                               Style="{StaticResource TextBlockText}"
+                               FontFamily="Torus"
+                               FontSize="20"
+                               Text="PresenceOWO">
+                    </TextBlock>
+                    <StackPanel x:Name="ControlBar"
+                                Grid.Row="0"
+                                Orientation="Horizontal"
+                                FlowDirection="RightToLeft"
+                                HorizontalAlignment="Right"
+                                Background="Transparent"
+                                Margin="0,0,5,0">
 
-                <StackPanel>
-                    <!-- LOGO -->
-                    <StackPanel Orientation="Horizontal"
+                        <Button Click="CloseBtn_Click"
+                                Style="{StaticResource controlButton}"
+                                Tag="#f23f42"
+                                >
+                            <fa:IconImage Icon="Xmark" Style="{StaticResource controlBtnIcon}"/>
+                        </Button>
+                        <Button Click="MaximizeBtn_Click"
+                                Style="{StaticResource controlButton}"
+                                Tag="#36393e">
+                            <fa:IconImage Icon="WindowMaximize" Style="{StaticResource controlBtnIcon}"/>
+                        </Button>
+                        <Button  Click="MinimizeBtn_Click"
+                                 Style="{StaticResource controlButton}"
+                                 Tag="#36393e">
+                            <fa:IconImage Icon="WindowMinimize" Style="{StaticResource controlBtnIcon}"/>
+
+                        </Button>
+
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border CornerRadius="0,0,0,9"
+                    Grid.Row="1">
+
+                    <Border.Background>
+                        <SolidColorBrush Color="{StaticResource dcDGrey}"/>
+                    </Border.Background>
+
+                    <StackPanel>
+                        <!-- LOGO -->
+                        <StackPanel Orientation="Horizontal"
                             Height="75"
-                            Margin="3,20,0,40"
+                            Margin="3,0,0,40"
                             >
 
-                        <Button Background="Transparent"
+                            <Button Background="Transparent"
                                 BorderThickness="0"
                                 Height="75"
                                 VerticalAlignment="Center"
                                 x:Name="LogoBtn"
                                 >
 
-                            <TextBlock VerticalAlignment="Center"
+                                <TextBlock VerticalAlignment="Center"
                                        FontSize="60" 
                                        Foreground="{StaticResource bgDcBlue}"
                                        FontFamily="Torus"
                                        Text="OWO!"
                                        />
-                        </Button>
-                    </StackPanel>
+                            </Button>
+                        </StackPanel>
 
-                    <RadioButton Style="{StaticResource menuButton}"
+                        <RadioButton Style="{StaticResource menuButton}"
                                  Margin="25,0,0,0"
-                                 x:Name="RPBtn"
                                  IsChecked="True"
                                  Command="{Binding ShowRPView}">
-                        <TextBlock>
-                            Rich Presence
-                        </TextBlock>
-                    </RadioButton>
+                            <TextBlock>
+                                Rich Presence
+                            </TextBlock>
+                        </RadioButton>
 
-                    <RadioButton Style="{StaticResource menuButton}"
+                        <RadioButton Style="{StaticResource menuButton}"
                                  Margin="25,0,0,0"
-                                 x:Name="PreferenceBtn"
                                  Command="{Binding ShowPreferenceView}">
-                        <TextBlock>
-                            Preferences
-                        </TextBlock>
-                    </RadioButton>
-                </StackPanel>
-            </Border>
+                            <TextBlock>
+                                Preferences
+                            </TextBlock>
+                        </RadioButton>
+                    </StackPanel>
+                </Border>
 
-            <!-- Content -->
-            <Border CornerRadius="0,10,10,0"
+                <!-- Content -->
+                <Border CornerRadius="0,0,9,0"
                     Grid.Column="1">
 
-                <Border.Background>
-                    <SolidColorBrush Color="{StaticResource dcGrey}"/>
-                </Border.Background>
-
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Border CornerRadius="0,10,0,0"
-                            MouseLeftButtonDown="ControlBar_MouseLeftButtonDown"
-                            MouseEnter="ControlBar_MouseEnter">
-
-                        <Border.Background>
-                            <SolidColorBrush Color="{StaticResource dcDGrey}"></SolidColorBrush>
-                        </Border.Background>
-                        
-                        <StackPanel x:Name="ControlBar"
-                                    Grid.Row="0"
-                                    Orientation="Horizontal"
-                                    FlowDirection="RightToLeft"
-                                    HorizontalAlignment="Right"
-                                    Background="Transparent"
-                                    Margin="0,0,5,0"
-                                    >
-
-
-                            <Button x:Name="CloseBtn"
-                                    Style="{StaticResource controlButton}"
-                                    Click="CloseBtn_Click"
-                                    Tag="#f23f42">
-                                <fa:IconImage Icon="Xmark" Style="{StaticResource controlBtnIcon}"/>
-                            </Button>
-                            <Button x:Name="MaximizeBtn"
-                                    Style="{StaticResource controlButton}"
-                                    Click="MaximizeBtn_Click"
-                                    Tag="#36393e">
-                                <fa:IconImage Icon="WindowMaximize" Style="{StaticResource controlBtnIcon}"/>
-                            </Button>
-                            <Button x:Name="MinimizeBtn"
-                                    Style="{StaticResource controlButton}"
-                                    Click="MinimizeBtn_Click"
-                                    Tag="#36393e">
-                                <fa:IconImage Icon="WindowMinimize" Style="{StaticResource controlBtnIcon}"/>
-
-                            </Button>
-
-                        </StackPanel>
-                    </Border>
+                    <Border.Background>
+                        <SolidColorBrush Color="{StaticResource dcGrey}"/>
+                    </Border.Background>
 
                     <ContentControl Content="{Binding CurrentChildView}"
-                                    Grid.Row="1"
+                                    Grid.Column="1"
                                     Margin="10"
-                                    HorizontalContentAlignment="Stretch" 
-                                    VerticalContentAlignment="Stretch"/>
+                                    />
 
-                </Grid>
-
-            </Border>
+                </Border>
+            </Grid>
         </Grid>
     </Border>
 </Window>
