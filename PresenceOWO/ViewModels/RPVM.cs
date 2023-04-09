@@ -114,7 +114,7 @@ namespace PresenceOWO.ViewModels
                 (param) => !(param as object[]).Any(e => e == null));
             StopPresence = new VMCommand(stopPresence);
 
-            timestampElements = new object[4];
+            timestampElements = new object[2];
 
             updateTimer = new DispatcherTimer();
             updateTimer.Tick += UpdateTimer_Tick;
@@ -284,8 +284,6 @@ namespace PresenceOWO.ViewModels
 
             timestampElements[0] = stackPanel.FindName("TimestampBox");
             timestampElements[1] = stackPanel.FindName("TimeContainer");
-            timestampElements[2] = stackPanel.FindName("Calendar");
-            timestampElements[3] = stackPanel.FindName("Clock");
 
             OnTimestampModeChanged(Args.TimestampModeNumber);
             UpdateTimeElementVisibility();
