@@ -130,8 +130,12 @@ namespace PresenceOWO.ViewModels
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
+            UpdateTimerText();
+        }
 
-            if (Args.TimestampModeNumber == 0)
+        private void UpdateTimerText()
+        {
+            if (Args.TimestampModeNumber == 0 || !selectedDateTime.HasValue)
                 return;
 
             TimeSpan span;
@@ -204,6 +208,8 @@ namespace PresenceOWO.ViewModels
                     CustomTimeSelectEnabled = false;
                     showTimeContainer = false;
                     updateTimer.Stop();
+                    TimerString = string.Empty;
+                    selectedDateTime = null;
                     break;
                 //
                 case 1:
@@ -234,7 +240,8 @@ namespace PresenceOWO.ViewModels
                     goto case 69420;
 
                 case 69420:
-                    updateTimer.Start();
+                    if(!updateTimer.IsEnabled) updateTimer.Start();
+                    UpdateTimerText();
                     break;
 
 
