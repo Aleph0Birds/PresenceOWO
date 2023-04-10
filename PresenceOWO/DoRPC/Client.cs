@@ -83,7 +83,7 @@ namespace PresenceOWO.DoRPC
 
             if (e.EnabledButtons > 0)
             {
-                ; ; //for crying
+                ;; //am crying
 
                 if (IsEmpty(e.BtnText1, e.BtnUrl1))
                 {
@@ -91,7 +91,7 @@ namespace PresenceOWO.DoRPC
                     return;
                 }
 
-                    presence.Buttons = new Button[e.EnabledButtons];
+                presence.Buttons = new Button[e.EnabledButtons];
                 presence.Buttons[0] = new() { Label = e.BtnText1, Url = e.BtnUrl1 };
 
                 if (e.EnabledButtons == 2)
@@ -141,7 +141,7 @@ namespace PresenceOWO.DoRPC
 
         private static void ShowMessage(byte i)
         {
-            MessageBox.Show($"Button {i} Text and button {i} Url cannot be empty.");
+            MessageBox.Show($"Button {i} Text and Button {i} Url cannot be empty.");
         }
     }
 }

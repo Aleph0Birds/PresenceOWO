@@ -28,6 +28,7 @@ namespace PresenceOWO.ViewModels
         private bool addBtnBtnEnabled;
         private bool button1Enabled;
         private bool button2Enabled;
+        private string endText;
 
         public RPArgs Args { get; set; }
 
@@ -250,24 +251,28 @@ namespace PresenceOWO.ViewModels
                 return;
 
             TimeSpan span;
+
             if (Args.TimestampModeNumber == 4) // until custom
             {
-                if (selectedDateTime < DateTime.Now)
+                if (selectedDateTime <= DateTime.Now)
                     span = TimeSpan.Zero;
                 else
                     span = (TimeSpan)(selectedDateTime - DateTime.Now);
-
-                TimerString = $"{span:hh\\:mm\\:ss} left";
             }
             else
             {
-
-                if (selectedDateTime > DateTime.Now)
+                if (selectedDateTime >= DateTime.Now)
                     span = TimeSpan.Zero;
                 else
                     span = (TimeSpan)(DateTime.Now - selectedDateTime);
-                TimerString = $"{span:hh\\:mm\\:ss} elapsed";
             }
+
+            if (span.Hours > 0)
+                TimerString = $"{span:hh\\:mm\\:ss} {endText}";
+            else
+                TimerString = $"{span:mm\\:ss} {endText}";
+            return;
+
         }
 
         private void updateClient(object obj)
@@ -351,11 +356,18 @@ namespace PresenceOWO.ViewModels
                     TimestampBoxEnabled = true;
                     CustomTimeSelectEnabled = false;
                     showTimeContainer = true;
+                    endText = "elapsed";
                     goto case 69420;
 
                 // Custom
                 case 3:
+                    endText = "elapsed";
+                    goto case 69;
+
                 case 4:
+                    endText = "left";
+                    goto case 69;
+                case 69:
                     Args.Timestamp = ArgDoing.DateTimeToTimestamp(SelectedDate, SelectedTime);
                     CustomTimeSelectEnabled = true;
                     TimestampBoxEnabled = true;
@@ -368,12 +380,9 @@ namespace PresenceOWO.ViewModels
                     UpdateTimerText();
                     break;
 
-
                 default:
                     throw new Exception("Timestamp mode not supported.");
             }
-
-
         }
 
         private void InitTimestampElements(object obj)
