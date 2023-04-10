@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Timers;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Threading;
-using DiscordRPC;
-using MaterialDesignThemes.Wpf;
 using PresenceOWO.DoRPC;
 
 namespace PresenceOWO.ViewModels
@@ -29,6 +24,10 @@ namespace PresenceOWO.ViewModels
         private bool timestampBoxEnabled;
         private string timerString;
         private bool stopPresenceButtonEnabled;
+        private Stack<object> buttonStack;
+        private bool addBtnBtnEnabled;
+        private bool button1Enabled;
+        private bool button2Enabled;
 
         public RPArgs Args { get; set; }
 
@@ -38,6 +37,10 @@ namespace PresenceOWO.ViewModels
 
         public VMCommand InitTimeElements { get; init; }
         public VMCommand StopPresence { get; init; }
+        public VMCommand OpenURL { get; init; }
+        public VMCommand CreateButton { get; init; }
+
+        public VMCommand RemoveButton { get; init; }
 
         public bool TimestampBoxEnabled
         {
@@ -58,7 +61,7 @@ namespace PresenceOWO.ViewModels
             }
         }
 
-        public string TimerString 
+        public string TimerString
         {
             get => timerString;
             set
@@ -104,17 +107,51 @@ namespace PresenceOWO.ViewModels
             }
         }
 
+        public bool AddBtnBtnEnabled
+        {
+            get => addBtnBtnEnabled;
+            set
+            {
+                addBtnBtnEnabled = value;
+                OnPropChanged(nameof(AddBtnBtnEnabled));
+            }
+        }
+
+        public bool Button1Enabled
+        {
+            get => button1Enabled;
+            set
+            {
+                button1Enabled = value;
+                OnPropChanged(nameof(Button1Enabled));
+            }
+        }
+        public bool Button2Enabled
+        {
+            get => button2Enabled;
+            set
+            {
+                button2Enabled = value;
+                OnPropChanged(nameof(Button2Enabled));
+            }
+        }
+
         public RPVM()
         {
-
+            #region Initialize VMCommands
             UpdatePresence = new VMCommand(updateClient);
             UpdateVisibility = new VMCommand(UpdateElementsVisibilityOnChanged,
-                (param) => param != null);
+                ArgDoing.NotNull);
             InitTimeElements = new VMCommand(InitTimestampElements,
-                (param) => !(param as object[]).Any(e => e == null));
+                param => !(param as object[]).Any(e => e == null));
             StopPresence = new VMCommand(stopPresence);
+            OpenURL = new VMCommand(openURL, ArgDoing.NotNullAs<string>);
+            CreateButton = new VMCommand(createButton, ArgDoing.NotNullAs<StackPanel>);
+            RemoveButton = new VMCommand(removedButton, ArgDoing.NotNullAs<StackPanel>);
+            #endregion
 
             timestampElements = new object[2];
+            buttonStack = new Stack<object>(2);
 
             updateTimer = new DispatcherTimer();
             updateTimer.Tick += UpdateTimer_Tick;
@@ -130,16 +167,76 @@ namespace PresenceOWO.ViewModels
                 LargeImageText = "! OWO !",
                 SmallImageText = ".w.",
                 TimestampModeNumber = 1,
+                BtnText1 = "Click to see pussy",
+                BtnUrl1 = @"https://www.youtube.com/watch?v=uwmeH6Rnj2E",
             };
 
             showTimeContainer = true;
             SelectedDate = DateTime.Today.ToLocalTime();
             SelectedTime = DateTime.Now;
             StopPresenceButtonEnabled = false;
+            AddBtnBtnEnabled = true;
 
             updateTimer.IsEnabled = true;
             updateTimer.Start();
             PropertyChanged += OnPropChangedHandle;
+        }
+
+        private void removedButton(object obj)
+        {
+            if (buttonStack.Count <= 0) return;
+            StackPanel buttonStackPanel = obj as StackPanel;
+
+            if (buttonStack.Count == 2)
+            {
+                Button2Enabled = false;
+                AddBtnBtnEnabled = true;
+            }
+            else Button1Enabled = false;
+
+            buttonStackPanel.Children.Remove(buttonStack.Pop() as Button);
+
+        }
+
+        private void createButton(object obj)
+        {
+            if (buttonStack.Count >= 2) return; // Max 2 buttons
+
+            StackPanel buttonStackPanel = obj as StackPanel;
+            // ah yes nice butt
+            Button butt = new Button();
+            butt.Style = buttonStackPanel.FindResource("PresenceButton") as Style;
+            string contentBindPath;
+            string propName;
+
+            if (buttonStack.Count == 1)
+            {
+                contentBindPath = "Args.BtnText2";
+                propName = "Args.BtnUrl2";
+                Button2Enabled = true;
+                AddBtnBtnEnabled = false;
+            }
+            else // empty
+            {
+                contentBindPath = "Args.BtnText1";
+                propName = "Args.BtnUrl1";
+                Button1Enabled = true;
+            }
+
+            butt.SetBinding(Button.ContentProperty, new Binding(contentBindPath));
+            butt.SetBinding(Button.CommandProperty, new Binding(nameof(OpenURL)));
+            butt.SetBinding(Button.CommandParameterProperty, new Binding(propName));
+            butt.ToolTip = new ToolTip() { Content = "Right click to remove a button" };
+
+            buttonStackPanel.Children.Insert(buttonStack.Count, butt);
+            buttonStack.Push(butt);
+
+        }
+
+        public void openURL(object obj)
+        {
+            if (string.IsNullOrEmpty(obj as string)) return;
+            Process.Start(obj as string);
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
@@ -175,6 +272,7 @@ namespace PresenceOWO.ViewModels
 
         private void updateClient(object obj)
         {
+            Args.EnabledButtons = (byte)buttonStack.Count;
             Client.HandleUpdate(this, Args);
             StopPresenceButtonEnabled = Client.InPresence;
         }
@@ -206,7 +304,7 @@ namespace PresenceOWO.ViewModels
             Grid timeContainer = timestampElements[1] as Grid;
 
             timestampTextBox.Text = Args.TimestampModeNumber == 0 ? "" : Args.Timestamp.ToString();
-            timeContainer.Visibility = (Visibility)(1 - BoolTooInt(showTimeContainer));
+            timeContainer.Visibility = (Visibility)(1 - BoolToByte(showTimeContainer));
         }
 
         public void UpdateTimestampText(string newValue)
@@ -221,7 +319,7 @@ namespace PresenceOWO.ViewModels
 
         private unsafe byte BoolToByte(bool b)
         {
-            return b ? 1 : 0;
+            return *((byte*)&b);
         }
 
         private void OnTimestampModeChanged(int modeNumber)
@@ -266,7 +364,7 @@ namespace PresenceOWO.ViewModels
                     goto case 69420;
 
                 case 69420:
-                    if(!updateTimer.IsEnabled) updateTimer.Start();
+                    if (!updateTimer.IsEnabled) updateTimer.Start();
                     UpdateTimerText();
                     break;
 

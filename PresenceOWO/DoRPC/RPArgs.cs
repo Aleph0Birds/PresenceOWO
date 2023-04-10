@@ -18,8 +18,15 @@ namespace PresenceOWO.DoRPC
         public string SmallImageKey { get; set; }
         public string SmallImageText { get; set; }
         public ulong Timestamp { get; set; }
-
         public int TimestampModeNumber { get; set; }
+
+        // Buttons
+        public string BtnText1 { get; set; }
+        public string BtnUrl1 { get; set; }
+        public string BtnText2 { get; set; }
+        public string BtnUrl2 { get; set; }
+
+        public byte EnabledButtons { get; set; }
     }
 
     public enum TimestampMode

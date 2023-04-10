@@ -1,5 +1,6 @@
 ﻿using DiscordRPC;
 using DiscordRPC.Logging;
+using PresenceOWO.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,7 +20,7 @@ namespace PresenceOWO.DoRPC
         public static bool InPresence { get; set; }
         public static void Initialize()
         {
-            client = new (app_id)
+            client = new(app_id)
             {
                 Logger = new ConsoleLogger { Level = LogLevel.Warning }
             };
@@ -30,11 +31,11 @@ namespace PresenceOWO.DoRPC
 
         public static void HandleUpdate(object sender, RPArgs e)
         {
-            if(!Initialized)
+            if (!Initialized)
             {
                 if (string.IsNullOrEmpty(e.ApplicationID))
                 {
-                    MessageBox.Show(@"Please input your application id");
+                    MessageBox.Show("Please input the application id.", "Application ID required");
                     return;
                 }
                 else
@@ -48,10 +49,10 @@ namespace PresenceOWO.DoRPC
             if (!string.IsNullOrEmpty(e.ApplicationID) && app_id != e.ApplicationID)
                 UpdateAppID(e.ApplicationID);
 
-            StartPresence(e);
+            StartPresence(sender as RPVM, e);
         }
 
-        private static void StartPresence(RPArgs e)
+        private static void StartPresence(RPVM viewModel, RPArgs e)
         {
 
             // oh yeah nice ass
@@ -69,10 +70,10 @@ namespace PresenceOWO.DoRPC
                 .WithAssets(ass)
                 ;
 
-            if(e.TimestampModeNumber != 0)
+            if (e.TimestampModeNumber != 0)
             {
                 Timestamps stamp = new Timestamps();
-                if((TimestampMode)e.TimestampModeNumber == TimestampMode.UntilCustom)
+                if ((TimestampMode)e.TimestampModeNumber == TimestampMode.UntilCustom)
                     stamp.End = Timestamps.FromUnixMilliseconds(e.Timestamp * 1000);
                 else
                     stamp.Start = Timestamps.FromUnixMilliseconds(e.Timestamp * 1000);
@@ -80,8 +81,40 @@ namespace PresenceOWO.DoRPC
                 presence.WithTimestamps(stamp);
             }
 
+            if (e.EnabledButtons > 0)
+            {
+                ; ; //for crying
+
+                if (IsEmpty(e.BtnText1, e.BtnUrl1))
+                {
+                    ShowMessage(1);
+                    return;
+                }
+
+                    presence.Buttons = new Button[e.EnabledButtons];
+                presence.Buttons[0] = new() { Label = e.BtnText1, Url = e.BtnUrl1 };
+
+                if (e.EnabledButtons == 2)
+                {
+                    if (IsEmpty(e.BtnText2, e.BtnUrl2))
+                    {
+                        ShowMessage(2);
+                        return;
+                    }
+                    presence.Buttons[1] = new() { Label = e.BtnText2, Url = e.BtnUrl2 };
+                }
+
+            }
+
             client.SkipIdenticalPresence = true;
-            client.SetPresence(presence);
+            try
+            {
+                client.SetPresence(presence);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             InPresence = true;
 
             ArgDoing.LastUpdateTime = DateTime.Now;
@@ -101,5 +134,14 @@ namespace PresenceOWO.DoRPC
             Initialize();
         }
 
+        private static bool IsEmpty(string text, string url)
+        {
+            return string.IsNullOrEmpty(url) || string.IsNullOrEmpty(text);
+        }
+
+        private static void ShowMessage(byte i)
+        {
+            MessageBox.Show($"Button {i} Text and button {i} Url cannot be empty.");
+        }
     }
 }

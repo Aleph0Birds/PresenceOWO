@@ -9,7 +9,8 @@ namespace PresenceOWO.DoRPC
 {
     public static class ArgDoing
     {
-        private static Regex regex = new Regex(@" +");
+        private static Regex whiteSpaceRegEx = new Regex(@" +");
+        private static Regex urlRegEx = new Regex(@"((https?|\w+)://)?(www\.|\w+\.)?\w+\.\w+.*");
 
         public static DateTime StartTime { get; set; }
 
@@ -18,7 +19,7 @@ namespace PresenceOWO.DoRPC
         public static string SimplifySpace(string str)
         {
             if(string.IsNullOrEmpty(str)) return "";
-            return regex.Replace(str.Trim(), "\t");
+            return whiteSpaceRegEx.Replace(str.Trim(), "\t");
         }
 
         /// <summary>
@@ -50,5 +51,11 @@ namespace PresenceOWO.DoRPC
         {
             return DateTime.Parse(date.Date.ToShortDateString() + "\t" + time.TimeOfDay.ToString());
         }
+
+        public static bool NotNullAs<T>(object param) where T : class => (param as T) != null;
+
+        public static bool NotNull(object param) => param != null;
+
+        public static bool IsUrlLike(string link) => urlRegEx.IsMatch(link);
     }
 }

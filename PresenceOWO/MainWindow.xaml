@@ -9,7 +9,7 @@
         xmlns:vm="clr-namespace:PresenceOWO.ViewModels"
         xmlns:views="clr-namespace:PresenceOWO.Views"
         mc:Ignorable="d"
-        Title="PresenceOWO" Height="550" Width="1000"
+        Title="PresenceOWO" Height="650" Width="1000"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="30"

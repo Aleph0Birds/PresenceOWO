@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace PresenceOWO.ViewModels
 {
     public class VMCommand : ICommand
     {
+
         private readonly Action<object> executeAction;
         private readonly Predicate<object> canExecuteAction;
 
@@ -35,7 +37,15 @@ namespace PresenceOWO.ViewModels
 
         public bool CanExecute(object parameter)
         {
-            return parameter==null || canExecuteAction(parameter);
+            try
+            { 
+                return parameter==null || canExecuteAction(parameter);
+            } 
+            catch (NullReferenceException e)
+            {
+                MessageBox.Show(e.StackTrace, $"{nameof(canExecuteAction)} is null");
+                return false;
+            }
         }
 
         public void Execute(object parameter)
