@@ -52,9 +52,13 @@ namespace PresenceOWO.DoRPC
             return DateTime.Parse(date.Date.ToShortDateString() + "\t" + time.TimeOfDay.ToString());
         }
 
-        public static bool NotNullAs<T>(object param) where T : class => (param as T) != null;
+        public static bool NotNullAs<T>(object param) where T : class => !IsNullAs<T>(param);
 
-        public static bool NotNull(object param) => param != null;
+        public static bool IsNullAs<T>(object param) where T : class => (param as T) == null;
+
+        public static bool NotNull(object param) => !IsNull(param);
+
+        public static bool IsNull(object param) => param == null;
 
         public static bool IsUrlLike(string link) => urlRegEx.IsMatch(link);
     }

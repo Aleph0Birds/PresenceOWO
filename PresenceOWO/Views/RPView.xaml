@@ -293,10 +293,20 @@
                 <StackPanel Orientation="Vertical">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseRightButtonDown">
-                            <i:InvokeCommandAction Command="{Binding RemoveButton}"
-                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=StackPanel}}"/>
+                            <i:InvokeCommandAction Command="{Binding RemoveButton}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
+                    <Button Content="{Binding Args.BtnText1}" 
+                            Style="{StaticResource PresenceButton}"
+                            Command="{Binding OpenURL}"
+                            CommandParameter="{Binding Args.BtnUrl1}"
+                            Visibility="{Binding Btn1Vis}"/>
+
+                    <Button Content="{Binding Args.BtnText2}" 
+                            Style="{StaticResource PresenceButton}"
+                            Command="{Binding OpenURL}"
+                            CommandParameter="{Binding Args.BtnUrl2}"
+                            Visibility="{Binding Btn2Vis}"/>
 
                     <Border BorderThickness="1" Margin="10,10,10,0"
                             CornerRadius="1">
@@ -322,11 +332,8 @@
                                 Foreground="{StaticResource bgDcBlue}"
                                 Content="+"
                                 IsEnabled="{Binding AddBtnBtnEnabled, UpdateSourceTrigger=PropertyChanged}"
-                                Command="{Binding CreateButton}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=StackPanel}}">
+                                Command="{Binding CreateButton}" />
 
-
-                        </Button>
                     </Border>
                 </StackPanel>
 

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Markup;
 using System.Windows.Threading;
+using System.Xml;
 using PresenceOWO.DoRPC;
 
 namespace PresenceOWO.ViewModels
@@ -24,7 +27,7 @@ namespace PresenceOWO.ViewModels
         private bool timestampBoxEnabled;
         private string timerString;
         private bool stopPresenceButtonEnabled;
-        private Stack<object> buttonStack;
+        private byte visibleButtons;
         private bool addBtnBtnEnabled;
         private bool button1Enabled;
         private bool button2Enabled;
@@ -42,6 +45,7 @@ namespace PresenceOWO.ViewModels
         public VMCommand CreateButton { get; init; }
 
         public VMCommand RemoveButton { get; init; }
+        public VMCommand RestoreButtons { get; init; }
 
         public bool TimestampBoxEnabled
         {
@@ -125,6 +129,7 @@ namespace PresenceOWO.ViewModels
             {
                 button1Enabled = value;
                 OnPropChanged(nameof(Button1Enabled));
+                OnPropChanged(nameof(Btn1Vis));
             }
         }
         public bool Button2Enabled
@@ -134,6 +139,24 @@ namespace PresenceOWO.ViewModels
             {
                 button2Enabled = value;
                 OnPropChanged(nameof(Button2Enabled));
+                OnPropChanged(nameof(Btn2Vis));
+
+            }
+        }
+
+        public Visibility Btn1Vis
+        {
+            get
+            {
+                return Button1Enabled? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        public Visibility Btn2Vis
+        {
+            get
+            {
+                return Button2Enabled ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -147,12 +170,11 @@ namespace PresenceOWO.ViewModels
                 param => !(param as object[]).Any(e => e == null));
             StopPresence = new VMCommand(stopPresence);
             OpenURL = new VMCommand(openURL, ArgDoing.NotNullAs<string>);
-            CreateButton = new VMCommand(createButton, ArgDoing.NotNullAs<StackPanel>);
-            RemoveButton = new VMCommand(removedButton, ArgDoing.NotNullAs<StackPanel>);
+            CreateButton = new VMCommand(createButton);
+            RemoveButton = new VMCommand(removedButton);
             #endregion
 
             timestampElements = new object[2];
-            buttonStack = new Stack<object>(2);
 
             updateTimer = new DispatcherTimer();
             updateTimer.Tick += UpdateTimer_Tick;
@@ -185,58 +207,40 @@ namespace PresenceOWO.ViewModels
 
         private void removedButton(object obj)
         {
-            if (buttonStack.Count <= 0) return;
-            StackPanel buttonStackPanel = obj as StackPanel;
+            if (visibleButtons <= 0) return;
 
-            if (buttonStack.Count == 2)
+            if (visibleButtons == 2)
             {
                 Button2Enabled = false;
                 AddBtnBtnEnabled = true;
             }
             else Button1Enabled = false;
 
-            buttonStackPanel.Children.Remove(buttonStack.Pop() as Button);
-
+            visibleButtons--;
         }
 
         private void createButton(object obj)
         {
-            if (buttonStack.Count >= 2) return; // Max 2 buttons
+            if (visibleButtons >= 2) return; // Max 2 buttons
 
-            StackPanel buttonStackPanel = obj as StackPanel;
-            // ah yes nice butt
-            Button butt = new Button();
-            butt.Style = buttonStackPanel.FindResource("PresenceButton") as Style;
-            string contentBindPath;
-            string propName;
-
-            if (buttonStack.Count == 1)
+            if (visibleButtons == 1)
             {
-                contentBindPath = "Args.BtnText2";
-                propName = "Args.BtnUrl2";
+                
                 Button2Enabled = true;
                 AddBtnBtnEnabled = false;
             }
             else // empty
             {
-                contentBindPath = "Args.BtnText1";
-                propName = "Args.BtnUrl1";
+                
                 Button1Enabled = true;
             }
 
-            butt.SetBinding(Button.ContentProperty, new Binding(contentBindPath));
-            butt.SetBinding(Button.CommandProperty, new Binding(nameof(OpenURL)));
-            butt.SetBinding(Button.CommandParameterProperty, new Binding(propName));
-            butt.ToolTip = new ToolTip() { Content = "Right click to remove a button" };
-
-            buttonStackPanel.Children.Insert(buttonStack.Count, butt);
-            buttonStack.Push(butt);
-
+            visibleButtons++;
         }
 
         public void openURL(object obj)
         {
-            if (string.IsNullOrEmpty(obj as string)) return;
+            if (ArgDoing.IsNullAs<string>(obj)) return;
             Process.Start(obj as string);
         }
 
@@ -277,7 +281,7 @@ namespace PresenceOWO.ViewModels
 
         private void updateClient(object obj)
         {
-            Args.EnabledButtons = (byte)buttonStack.Count;
+            Args.EnabledButtons = visibleButtons;
             Client.HandleUpdate(this, Args);
             StopPresenceButtonEnabled = Client.InPresence;
         }
