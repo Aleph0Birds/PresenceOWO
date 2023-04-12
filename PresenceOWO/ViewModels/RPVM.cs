@@ -165,11 +165,11 @@ namespace PresenceOWO.ViewModels
             #region Initialize VMCommands
             UpdatePresence = new VMCommand(updateClient);
             UpdateVisibility = new VMCommand(UpdateElementsVisibilityOnChanged,
-                ArgDoing.NotNull);
+                VMCommand.NotNull);
             InitTimeElements = new VMCommand(InitTimestampElements,
                 param => !(param as object[]).Any(e => e == null));
             StopPresence = new VMCommand(stopPresence);
-            OpenURL = new VMCommand(openURL, ArgDoing.NotNullAs<string>);
+            OpenURL = new VMCommand(openURL, VMCommand.IsUrlLike);
             CreateButton = new VMCommand(createButton);
             RemoveButton = new VMCommand(removedButton);
             #endregion
@@ -240,7 +240,7 @@ namespace PresenceOWO.ViewModels
 
         public void openURL(object obj)
         {
-            if (ArgDoing.IsNullAs<string>(obj)) return;
+            if (VMCommand.IsNullAs<string>(obj)) return;
             Process.Start(obj as string);
         }
 

@@ -17,6 +17,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using PresenceOWO.ViewModels;
 using PresenceOWO.DoRPC;
+using PresenceOWO.OWOSystem;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace PresenceOWO
 {
@@ -32,8 +35,6 @@ namespace PresenceOWO
             helper = new WindowInteropHelper(this);
             ToolTipService.ShowDurationProperty.OverrideMetadata(
                 typeof(DependencyObject), new FrameworkPropertyMetadata(int.MaxValue));
-            ArgDoing.StartTime = DateTime.Now;
-            ArgDoing.LastUpdateTime = null;
         }
 
         [DllImport("user32.dll")]
@@ -44,21 +45,28 @@ namespace PresenceOWO
             SendMessage(helper.Handle, 161, 2, 0);
         }
 
-        private void ControlBar_MouseEnter(object sender, MouseEventArgs e)
+        private void ControlBar_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
         }
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            if (SettingsManager.Settings.HideOnClosed)
+            {
+                Hide();
+                myNotifyIcon.Visibility = Visibility.Visible;
+                return;
+            }
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void MaximizeBtn_Click(object sender, RoutedEventArgs e)
         {
             if(WindowState == WindowState.Normal) 
                 WindowState = WindowState.Maximized;
-            else WindowState = WindowState.Normal;
+            else 
+                WindowState = WindowState.Normal;
         }
 
         private void MinimizeBtn_Click(object sender, RoutedEventArgs e)
