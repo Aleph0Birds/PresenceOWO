@@ -42,7 +42,7 @@ namespace PresenceOWO.ViewModels
 
         private void handleExit(object _)
         {
-            Application.Current.Shutdown();
+            Application.Current.MainWindow.Close();
         }
 
          

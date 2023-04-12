@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Windows.Forms.AxHost;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace PresenceOWO.DoRPC
 {
     public static class ArgDoing
     {
+        public const string ArgsPath = "args.json";
         private static Regex whiteSpaceRegEx = new Regex(@" +");
 
         public static DateTime StartTime { get; set; }
@@ -49,6 +52,20 @@ namespace PresenceOWO.DoRPC
         public static DateTime CombineDateTime(DateTime date, DateTime time)
         {
             return DateTime.Parse(date.Date.ToShortDateString() + "\t" + time.TimeOfDay.ToString());
+        }
+
+        public static RPArgs DefaultArgs()
+        {
+            return new RPArgs()
+            {
+                Details = "OWO",
+                State = "owo?",
+                LargeImageText = "! OWO !",
+                SmallImageText = ".w.",
+                TimestampModeNumber = 1,
+                BtnText1 = "Click to see pussy",
+                BtnUrl1 = @"https://www.youtube.com/watch?v=uwmeH6Rnj2E",
+            };
         }
     }
 }
