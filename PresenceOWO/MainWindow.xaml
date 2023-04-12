@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:PresenceOWO"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         xmlns:vm="clr-namespace:PresenceOWO.ViewModels"
         xmlns:views="clr-namespace:PresenceOWO.Views"
@@ -21,9 +22,8 @@
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
         Topmost="False"
-        ResizeMode="CanResizeWithGrip"
-        >
-    <!--Background= "{DynamicResource MaterialDesignPaper}"-->
+        ResizeMode="CanMinimize"
+        ShowInTaskbar="True">
 
     <Window.DataContext>
         <vm:MainVM/>
@@ -37,7 +37,7 @@
             <views:PreferenceView/>
         </DataTemplate>
     </Window.Resources>
-    
+
     <Border CornerRadius="10"
             BorderThickness="2"
             >
@@ -53,6 +53,39 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <tb:TaskbarIcon x:Name="myNotifyIcon"
+                            Visibility="Collapsed"
+                            MenuActivation="LeftOrRightClick"
+                            IconSource="/owo.ico"
+                            DoubleClickCommand="{Binding ShowWindow}"
+                            ToolTipText="PresenceOWO">
+
+                <tb:TaskbarIcon.TrayToolTip>
+                    <Border Background="White"
+                            BorderBrush="Gray"
+                            BorderThickness="1">
+                        
+                        <TextBlock Margin="5,1,5,2"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" 
+                                   Text="PresenceOWO"/>
+
+                    </Border>
+                </tb:TaskbarIcon.TrayToolTip>
+
+                <tb:TaskbarIcon.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Show window" Command="{Binding ShowWindow}" />
+                        <Separator />
+                        <MenuItem Header="Exit" Command="{Binding ExitApp}" />
+                    </ContextMenu>
+                </tb:TaskbarIcon.ContextMenu>
+                
+                
+                <tb:TaskbarIcon.DataContext>
+                    <vm:NotifyIconVM />
+                </tb:TaskbarIcon.DataContext>
+            </tb:TaskbarIcon>
 
             <Border CornerRadius="9,9,0,0"
                     MouseLeftButtonDown="ControlBar_MouseLeftButtonDown"

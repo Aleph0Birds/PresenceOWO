@@ -103,4 +103,14 @@
         <Setter Property="ToolTip" Value="Right click to remove bottom most button" />
     </Style>
 
+    <Style x:Key="SettingCheckBox" TargetType="CheckBox" BasedOn="{StaticResource MaterialDesignCheckBox}">
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="1.75" ScaleY="1.75"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontFamily" Value="gg sans Normal" />
+    </Style>
+
 </ResourceDictionary>

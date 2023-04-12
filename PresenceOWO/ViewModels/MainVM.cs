@@ -1,4 +1,8 @@
-﻿namespace PresenceOWO.ViewModels
+﻿using PresenceOWO.DoRPC;
+using PresenceOWO.OWOSystem;
+using System;
+
+namespace PresenceOWO.ViewModels
 {
     public class MainVM : VMBase
     {
@@ -27,6 +31,16 @@
 
             ShowRPView = new VMCommand(_ShowRPView);
             ShowPreferenceView = new VMCommand(_ShowPrefernceView);
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            ArgDoing.StartTime = DateTime.Now;
+            ArgDoing.LastUpdateTime = null;
+
+            SettingsManager.InitSettings();
 
             _ShowRPView("OWO");
         }
