@@ -42,7 +42,9 @@
                         HorizontalAlignment="Left"
                         Margin="10,0,15,0">
                 <TextBlock  Text="Application ID" Style="{StaticResource TextBlockText}"/>
-                <TextBox Style="{StaticResource TextBoxText}" Text="{Binding Args.ApplicationID}"/>
+                <TextBox Style="{StaticResource TextBoxText}" Text="{Binding Args.ApplicationID}"
+                         MaxLength="19"
+                         PreviewTextInput="TextBox_PreviewTextInput"/>
 
             </StackPanel>
 

@@ -22,7 +22,7 @@ namespace PresenceOWO.Views
     /// </summary>
     public partial class RPView : UserControl
     {
-        private Regex notNumberRegEx = new Regex(@"\D");
+        private readonly Regex notNumberRegEx = new Regex(@"\D");
         public RPView()
         {
             InitializeComponent();
