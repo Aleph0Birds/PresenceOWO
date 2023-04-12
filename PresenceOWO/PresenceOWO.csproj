@@ -94,6 +94,7 @@
     <Compile Include="DoRPC\ArgDoing.cs" />
     <Compile Include="DoRPC\Client.cs" />
     <Compile Include="DoRPC\RPArgs.cs" />
+    <Compile Include="IO\SavingManager.cs" />
     <Compile Include="OWOSystem\Settings.cs" />
     <Compile Include="OWOSystem\SettingsManager.cs" />
     <Compile Include="ViewModels\NotifyIconVM.cs" />
@@ -172,6 +173,7 @@
   <ItemGroup>
     <Resource Include="owo.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

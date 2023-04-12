@@ -1,4 +1,5 @@
 ﻿using DiscordRPC;
+using Newtonsoft.Json;
 using PresenceOWO.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace PresenceOWO.DoRPC
 {
+    [JsonObject]
     public class RPArgs : EventArgs
     {
         public string ApplicationID { get; set; }

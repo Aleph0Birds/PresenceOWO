@@ -11,6 +11,7 @@ using System.Windows.Markup;
 using System.Windows.Threading;
 using System.Xml;
 using PresenceOWO.DoRPC;
+using PresenceOWO.IO;
 
 namespace PresenceOWO.ViewModels
 {
@@ -183,16 +184,6 @@ namespace PresenceOWO.ViewModels
             Client.InPresence = false;
 
             // Arguments Initialization
-            Args = new RPArgs()
-            {
-                Details = "OWO",
-                State = "owo?",
-                LargeImageText = "! OWO !",
-                SmallImageText = ".w.",
-                TimestampModeNumber = 1,
-                BtnText1 = "Click to see pussy",
-                BtnUrl1 = @"https://www.youtube.com/watch?v=uwmeH6Rnj2E",
-            };
 
             showTimeContainer = true;
             SelectedDate = DateTime.Today.ToLocalTime();
@@ -203,6 +194,21 @@ namespace PresenceOWO.ViewModels
             updateTimer.IsEnabled = true;
             updateTimer.Start();
             PropertyChanged += OnPropChangedHandle;
+        }
+
+        public void Initialize()
+        {
+            RPArgs _args = SavingManager.LoadFromJson<RPArgs>(ArgDoing.ArgsPath);
+            if (_args != null)
+                Args = _args;
+            else
+                Args = ArgDoing.DefaultArgs();
+
+        }
+
+        public void OnWindowClosing()
+        {
+            SavingManager.SaveToJson(ArgDoing.ArgsPath, Args);
         }
 
         private void removedButton(object obj)

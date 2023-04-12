@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:PresenceOWO"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         xmlns:vm="clr-namespace:PresenceOWO.ViewModels"
@@ -37,6 +38,12 @@
             <views:PreferenceView/>
         </DataTemplate>
     </Window.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing"> <!-- using command because cancellation is not needed-->
+            <i:InvokeCommandAction Command="{Binding OnClosing}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Border CornerRadius="10"
             BorderThickness="2"

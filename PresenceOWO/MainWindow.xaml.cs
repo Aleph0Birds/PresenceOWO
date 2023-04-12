@@ -58,7 +58,7 @@ namespace PresenceOWO
                 myNotifyIcon.Visibility = Visibility.Visible;
                 return;
             }
-            System.Windows.Application.Current.Shutdown();
+            Close();
         }
 
         private void MaximizeBtn_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,6 @@
-﻿using PresenceOWO.DoRPC;
+﻿using Newtonsoft.Json.Linq;
+using PresenceOWO.DoRPC;
+using PresenceOWO.IO;
 using PresenceOWO.OWOSystem;
 using System;
 
@@ -23,6 +25,7 @@ namespace PresenceOWO.ViewModels
 
         public VMCommand ShowRPView { get; init; }
         public VMCommand ShowPreferenceView { get; init; }
+        public VMCommand OnClosing { get; init; }
 
         public MainVM()
         {
@@ -31,6 +34,7 @@ namespace PresenceOWO.ViewModels
 
             ShowRPView = new VMCommand(_ShowRPView);
             ShowPreferenceView = new VMCommand(_ShowPrefernceView);
+            OnClosing = new VMCommand(HandleClosing);
 
             Initialize();
         }
@@ -40,9 +44,18 @@ namespace PresenceOWO.ViewModels
             ArgDoing.StartTime = DateTime.Now;
             ArgDoing.LastUpdateTime = null;
 
+            SavingManager.Initialize();
             SettingsManager.InitSettings();
 
+            rpVM.Initialize();
+
             _ShowRPView("OWO");
+        }
+
+        private void HandleClosing (object _)
+        {
+            rpVM.OnWindowClosing();
+            SettingsManager.SaveSettings();
         }
 
 
