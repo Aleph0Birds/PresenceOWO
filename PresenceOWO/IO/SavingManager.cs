@@ -19,7 +19,8 @@ namespace PresenceOWO.IO
 
         public static void Initialize()
         {
-            CurrentDir = Environment.CurrentDirectory;
+            ExePath = Assembly.GetEntryAssembly().Location;
+            CurrentDir = Path.GetDirectoryName(ExePath);
         }
 
         public static T LoadFromJson<T>(string filename, bool nullableFields = true) where T : class 
