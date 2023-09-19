@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
@@ -14,6 +15,7 @@ namespace PresenceOWO.IO
     public static class SavingManager
     {
         public static string CurrentDir { get; private set; }
+        public static string ExePath { get; private set; }
 
         public static void Initialize()
         {

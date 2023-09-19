@@ -15,7 +15,11 @@
             <CheckBox Content="Run in background on closed" 
                       Style="{StaticResource SettingCheckBox}"
                       IsChecked="{Binding _HideOnClosed}" />
-            
+
+            <CheckBox Content="Launch PresenceOWO on Windows startup" 
+                      Style="{StaticResource SettingCheckBox}"
+                      IsChecked="{Binding _LaunchOnStartup}" />
+
         </StackPanel>
     </Grid>
 </UserControl>

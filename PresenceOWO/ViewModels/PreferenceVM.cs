@@ -14,6 +14,20 @@ namespace PresenceOWO.ViewModels
             }
         }
 
+        public bool _LaunchOnStartup
+        {
+            get => Settings.LaunchOnStartup;
+            set
+            {
+                Settings.LaunchOnStartup = value;
+                if(value)
+                    RegisterStartup();
+                else
+                    UnregisterStartup();
+                OnPropChanged(nameof(_LaunchOnStartup));
+            }
+        }
+
         public PreferenceVM() 
         {
             // Keep
