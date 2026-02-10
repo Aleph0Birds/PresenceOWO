@@ -1,6 +1,6 @@
 # PresenceOWO
 Simple Discord Rich Presence Tool made with WPF
-
+![Preview](https://cdn.discordapp.com/attachments/725271886476607520/1470774690761936896/image.png?ex=698c852b&is=698b33ab&hm=00a9786dbff71a3373d7f50d900596da2cf78a42ab86bb9fdd8cd29833171737&)
 ---
 
 Used Pakages:
